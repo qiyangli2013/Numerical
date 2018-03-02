@@ -20,9 +20,9 @@ def unif(seed = None, N = 100):
     return np.asarray(res) / float(m)
 
 # bernoulli random number generator baed on LGM
-def bern(seed = None, N = 100):
+def bern(p, seed = None, N = 100):
     # tmp = unif(seed, N)
-    res = [1 if item > 0.5 else 0 for item in unif(seed, N)]
+    res = [0 if item > p else 1 for item in unif(seed, N)]
     return np.asarray(res)
 
 # general discrete number generator
@@ -37,6 +37,22 @@ def gene_disc(x, p,seed = None, N = 100):
 
     return np.asarray(res)
 
+# binomal distribution
+# generate with two methods 1, recursion 2. expand from bernoulli
+def binomal(n , p, seed = None, N = 100, method = 0):
+
+    if method == 0:
+        res = []
+
+        for i in xrange(N):
+            res.append(np.sum(bern(p,seed, n)))
+
+        return np.asarray(res)
+    else:
+        return -1
+
+
+
 
 # if __name__ == "__main__":
 
@@ -47,9 +63,17 @@ def gene_disc(x, p,seed = None, N = 100):
 
     # bernoulli
     # check with mean
-    print np.mean(bern())
-    print np.mean(bern(10, 1000))
+    print np.mean(bern(0.3))
+    print np.mean(bern(0.3, 10, 1000))
 
-    myList = [0.0 , .1, -.1, .05, 2.0]
+    # general dsicrete distribution generator
+    # check with mean
+    x = np.asarray([1, 10, 7, 4, 5, 6])
+    p = np.asarray([0.3, 0.25, 0.05, 0.1, 0.18, 0.12])
+    print np.dot(x, p)
+    print np.mean(gene_disc(x, p, 10, 10000))
 
-    next(i for i, x in enumerate(myList) if x > 0)
+    # binomal dsitribution generator
+    # check with mean
+    print np.mean(binomal(100, 0.36))
+    print np.mean(binomal(100, 0.36, None, 10000))
